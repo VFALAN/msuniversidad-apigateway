@@ -1,0 +1,44 @@
+server:
+  port: 8080
+eureka:
+  client:
+    instance:
+      instance-id: ${spring.application.name}:${random.uuid}
+spring:
+  application:
+    name: msuniversidad-apigateway
+  cloud:
+    gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedHeaders: "*"
+            allowedMethods: "*"
+      routes:
+        - id: msuniversidad_auth
+          uri: lb://MSUNIVERSIDAD-AUTH
+          predicates:
+            - Path= /msuniversidad-auth/api/**
+        - id: msuniversidad-usuarios
+          uri: lb://MSUNIVERSIDAD-USUARIOS
+          predicates:
+            - Path= /msuniversidad-usuarios/api/**
+        - id: msuniversidad-sockets
+          uri: lb://MSUNIVERSIDAD-SOCKET
+          predicates:
+            - Path= /msuniversidad-socket/api/**
+        - id: msuniversidad-minio
+          uri: lb://MSUNIVERSIDAD-MINIO
+          predicates:
+            - Path= /msuniversidad-minio/api/**
+        - id: msuniversidad-aulas
+          uri: lb://MSUNIVERSIDAD-AULAS
+          predicates:
+            - Path= /msuniversidad-aulas/api/**
+
+
+
+
